@@ -1,0 +1,44 @@
+{
+  "name": "mulmoscript-mcp",
+  "version": "0.0.1",
+  "description": "mulmoscript generator mcp server",
+  "main": "lib/index.js",
+  "bin": {
+    "mulmocast-vision": "lib/index.js"
+  },
+  "files": [
+    "./lib"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src tests",
+    "format": "prettier --write '{src,tests,html}/**/*.{ts,html}'",
+    "test": "node --test --require ts-node/register ./tests/test_*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isamu/mulmoscript-mcp"
+  },
+  "author": "Isamu Arimoto",
+  "bugs": {
+    "url": "https://github.com/isamu/mulmoscript-mcp/issues"
+  },
+  "homepage": "https://github.com/isamu/mulmoscript-mcp",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.5"
+  },
+  "devDependencies": {
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.42.0"
+  },
+  "types": "./lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  }
+}
