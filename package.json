@@ -1,6 +1,6 @@
 {
   "name": "mulmoscript-mcp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "mulmoscript generator mcp server",
   "main": "lib/index.js",
   "bin": {
