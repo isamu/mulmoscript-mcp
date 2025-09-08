@@ -61,22 +61,28 @@ export class MulmoScriotGenerator {
       return { text: `not exist such beat ${index}` };
     }
     const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
-    this.data.beats[index] = { ...this.data.beats[index], newBeat };
+    this.data.beats[index] = { ...this.data.beats[index], ...newBeat };
     return {
       text: JSON.stringify(this.data, null, 2),
+      newBeat,
     };
   };
 
-  public setImagePromptOnBeat = ({ index, text }: { index: number; text: string }) => {
+  public setImagePromptOnBeat = ({ index, imagePrompt }: { index: number; imagePrompt: string }) => {
     if (!this.data.beats[index]) {
       return { text: `not exist such beat ${index}` };
     }
-    this.data.beats[index]["imagePrompt"] = text;
+    this.data.beats[index]["imagePrompt"] = imagePrompt;
     return {
       text: JSON.stringify(this.data, null, 2),
+      index,
+      imagePrompt,
     };
   };
 
+  // setSlideImage
+  
+  
   public saveMulmoScript = () => {
     const outputDir = path.resolve(this.outputDir, this.sessionDir);
     const outFile = path.resolve(outputDir, "script.json");
