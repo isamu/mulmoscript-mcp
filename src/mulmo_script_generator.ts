@@ -1,6 +1,15 @@
 import path from "path";
 import { writeFileSync, mkdirSync } from "fs";
 
+type BeatWithPosition = { index: number; beat: Beat };
+type BeatPosition = { index: number };
+type Beat = {
+  id?: string;
+  speaker?: string;
+  test: string;
+  imagePrompt?: string;
+};
+
 export class MulmoScriotGenerator {
   protected outputDir: string;
   protected sessionDir: string;
@@ -44,7 +53,7 @@ export class MulmoScriotGenerator {
     return { text: "" };
   };
 
-  public addBeatToMulmoScript = ({ beat }: { beat: any }) => {
+  public addBeatToMulmoScript = ({ beat }: { beat: Beat }) => {
     if (typeof beat === "string") {
       this.data.beats.push(JSON.parse(beat));
     } else {
@@ -56,7 +65,16 @@ export class MulmoScriotGenerator {
     };
   };
 
-  public updateBeatOnMulmoScript = ({ index, beat }: { index: number; beat: any }) => {
+  public insertAtBeatToMulmoScript = ({ index, beat }: BeatWithPosition) => {
+    const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
+    newBeat.id = crypto.randomUUID();
+    this.data.beats.splice(index, 0, newBeat);
+    return {
+      text: JSON.stringify(this.data, null, 2),
+    };
+  };
+
+  public updateBeatOnMulmoScript = ({ index, beat }: BeatWithPosition) => {
     if (!this.data.beats[index]) {
       return { text: `not exist such beat ${index}` };
     }
@@ -64,7 +82,16 @@ export class MulmoScriotGenerator {
     this.data.beats[index] = { ...this.data.beats[index], ...newBeat };
     return {
       text: JSON.stringify(this.data, null, 2),
-      newBeat,
+    };
+  };
+
+  public deleteBeatOnMulmoScript = ({ index }: BeatPosition) => {
+    if (!this.data.beats[index]) {
+      return { text: `not exist such beat ${index}` };
+    }
+    this.data.beats.splice(index, 1);
+    return {
+      text: JSON.stringify(this.data, null, 2),
     };
   };
 
@@ -80,9 +107,16 @@ export class MulmoScriotGenerator {
     };
   };
 
-  // setSlideImage
-  
-  
+  // TODO:
+  // mulmo vision
+  //   applay hoge
+  // speaker
+  //   getSpeakers
+  //   setSpeaker
+  // style
+  //   getStyles
+  //   setStyle
+
   public saveMulmoScript = () => {
     const outputDir = path.resolve(this.outputDir, this.sessionDir);
     const outFile = path.resolve(outputDir, "script.json");

@@ -35,6 +35,26 @@ export const generatorTools = [
   {
     type: "function",
     function: {
+      name: "insertAtBeatToMulmoScript",
+      description: "insert beat to mulmo script.",
+      parameters: {
+        type: "object",
+        index: { type: "number", description: "position index of beats array" },
+        beat: {
+          type: "object",
+          properties: {
+            text: { type: "string", description: "talk script for each beat" },
+            speaker: { type: "string", description: "speaker" },
+          },
+          required: ["text"],
+        },
+        required: ["beat", "index"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "updateBeatOnMulmoScript",
       description: "update beat on mulmo script.",
       parameters: {
@@ -52,6 +72,18 @@ export const generatorTools = [
           },
         },
         required: ["beat", "index"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "deleteBeatOnMulmoScript",
+      description: "delete beat from mulmo script.",
+      parameters: {
+        type: "object",
+        index: { type: "number", description: "position index of beats array" },
+        required: ["index"],
       },
     },
   },
