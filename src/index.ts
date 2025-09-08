@@ -4,81 +4,11 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, CallToolRequest, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import os from "os";
+import path from "path";
+
 import { MulmoScriotGenerator } from "./mulmo_script_generator";
-
-
-export const tools = [
-  {
-    type: "function",
-    function: {
-      name: "dumpScript",
-      description: "Dump current mulmoscript json data.",
-      parameters: {
-        type: "object",
-        properties: {
-          mode: { type: "string", description: "mode" },
-        },
-        required: ["url"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "addBeatToMulmoScript",
-      description: "add beat to mulmo script.",
-      parameters: {
-        type: "object",
-        beat: {
-          type: "object",
-          properties: {
-            text: { type: "string", description: "talk script for each beat" },
-            speaker: { type: "string", description: "speaker" },
-          },
-          required: ["text"],
-        },
-        required: ["beat"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "updateBeatOnMulmoScript",
-      description: "update beat on mulmo script.",
-      parameters: {
-        type: "object",
-        properties: {
-          index: { type: "number", description: "index of beats array" },
-          beat: {
-            type: "object",
-            properties: {
-              text: { type: "string", description: "talk script for each beat" },
-              speaker: { type: "string", description: "speaker" },
-            },
-            required: ["text"],
-          },
-        },
-        required: ["beat", "index"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "setImagePromptOnBeat",
-      description: "update beat on mulmo script.",
-      parameters: {
-        type: "object",
-        properties: {
-          text: { type: "string", description: "talk script for each beat" },
-          speaker: { type: "string", description: "speaker" },
-        },
-        required: ["text"],
-      },
-    },
-  },
-]
+import { generatorTools } from "./tools";
 
 export const openAIToolsToAnthropicTools = (tools: any[]) => {
   return {
@@ -90,7 +20,12 @@ export const openAIToolsToAnthropicTools = (tools: any[]) => {
 };
 
 export const getServer = () => {
-  const generator = new MulmoScriotGenerator({ outputDir: "123"});
+  const documentsDir = path.join(os.homedir(), "Documents");
+  const now = Date.now();
+
+  const outputDir = path.join(documentsDir, "mulmocast-vision", String(now));
+
+  const generator = new MulmoScriotGenerator({ outputDir });
 
   const server = new Server(
     {
@@ -106,13 +41,14 @@ export const getServer = () => {
 
   // List available tools
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return openAIToolsToAnthropicTools(tools);
+    return openAIToolsToAnthropicTools(generatorTools);
   });
 
   // Handle tool calls
   server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
     const { name, arguments: args } = request.params;
     try {
+      console.error(name, JSON.stringify(args));
       if (name in generator && args) {
         const key = name as keyof typeof generator;
         const method = generator[key];
@@ -126,14 +62,13 @@ export const getServer = () => {
               },
             ],
           };
-          
         }
       }
       return {
         content: [
           {
             type: "text",
-            text: "hello",
+            text: `hello ${name} ${JSON.stringify(args)}`,
           },
         ],
       };
