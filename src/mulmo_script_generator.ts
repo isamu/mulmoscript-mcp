@@ -39,22 +39,39 @@ export class MulmoScriotGenerator {
     };
   };
 
+  public setSpeaker = () => {
+    // TODO
+    return { text: "" };
+  };
+
   public addBeatToMulmoScript = ({ beat }: { beat: any }) => {
     if (typeof beat === "string") {
       this.data.beats.push(JSON.parse(beat));
     } else {
       this.data.beats.push(beat);
     }
+    this.data.beats[this.data.beats.length - 1].id = crypto.randomUUID();
     return {
-      id: crypto.randomUUID(),
       text: JSON.stringify(this.data, null, 2),
     };
   };
 
   public updateBeatOnMulmoScript = ({ index, beat }: { index: number; beat: any }) => {
-    if (this.data.beats[index]) {
-      this.data.beats[index] = beat;
+    if (!this.data.beats[index]) {
+      return { text: `not exist such beat ${index}` };
     }
+    const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
+    this.data.beats[index] = { ...this.data.beats[index], newBeat };
+    return {
+      text: JSON.stringify(this.data, null, 2),
+    };
+  };
+
+  public setImagePromptOnBeat = ({ index, text }: { index: number; text: string }) => {
+    if (!this.data.beats[index]) {
+      return { text: `not exist such beat ${index}` };
+    }
+    this.data.beats[index]["imagePrompt"] = text;
     return {
       text: JSON.stringify(this.data, null, 2),
     };
@@ -71,15 +88,8 @@ export class MulmoScriotGenerator {
     };
   };
 
-  public loadBeat = () => {
-    // TODO
-    return {
-      text: "",
-    };
-  };
-
   // for mcp
-  public setDirectory = async ({directoryName}: {directoryName: string}) => {
+  public setDirectory = async ({ directoryName }: { directoryName: string }) => {
     this.sessionDir = directoryName as string;
     const outputDir = path.resolve(this.outputDir, this.sessionDir);
     mkdirSync(outputDir, { recursive: true });
