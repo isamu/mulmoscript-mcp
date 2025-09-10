@@ -108,8 +108,6 @@ export class MulmoScriotGenerator {
   };
 
   // TODO:
-  // mulmo vision
-  //   applay hoge
   // speaker
   //   getSpeakers
   //   setSpeaker
@@ -146,8 +144,9 @@ export class MulmoScriotGenerator {
       return { text: `not exist such beat ${index}` };
     }
     //
+    const { imagePrompt: __, ...newBeat } = this.data.beats[index];
     this.data.beats[index] = {
-      ...this.data.beats[index],
+      ...newBeat,
       image: {
         type: "vision",
         style: functionNameToTemplateName(functionName),

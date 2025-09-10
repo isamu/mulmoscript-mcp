@@ -1,6 +1,6 @@
-import { OpenAITool } from "./type";
+import { type OpenAITool } from "mulmocast-vision";
 
-export const generatorTools: OpenAITool[]  = [
+export const generatorTools: OpenAITool[] = [
   {
     type: "function",
     function: {
