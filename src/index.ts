@@ -10,8 +10,9 @@ import path from "path";
 import { MulmoScriotGenerator } from "./mulmo_script_generator";
 import { generatorTools } from "./tools";
 import { toolsForBeat } from "./tools2";
+import { OpenAITool } from "./type";
 
-export const openAIToolsToAnthropicTools = (tools: any[]) => {
+export const openAIToolsToAnthropicTools = (tools: OpenAITool[]) => {
   return {
     tools: tools.map((tool) => {
       const { name, description, parameters } = tool.function;

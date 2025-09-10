@@ -1,4 +1,6 @@
-export const generatorTools = [
+import { OpenAITool } from "./type";
+
+export const generatorTools: OpenAITool[]  = [
   {
     type: "function",
     function: {
@@ -20,13 +22,15 @@ export const generatorTools = [
       description: "add beat to mulmo script.",
       parameters: {
         type: "object",
-        beat: {
-          type: "object",
-          properties: {
-            text: { type: "string", description: "talk script for each beat" },
-            speaker: { type: "string", description: "speaker" },
+        properties: {
+          beat: {
+            type: "object",
+            properties: {
+              text: { type: "string", description: "talk script for each beat" },
+              speaker: { type: "string", description: "speaker" },
+            },
+            required: ["text"],
           },
-          required: ["text"],
         },
         required: ["beat"],
       },
@@ -39,14 +43,16 @@ export const generatorTools = [
       description: "insert beat to mulmo script.",
       parameters: {
         type: "object",
-        index: { type: "number", description: "position index of beats array" },
-        beat: {
-          type: "object",
-          properties: {
-            text: { type: "string", description: "talk script for each beat" },
-            speaker: { type: "string", description: "speaker" },
+        properties: {
+          index: { type: "number", description: "position index of beats array" },
+          beat: {
+            type: "object",
+            properties: {
+              text: { type: "string", description: "talk script for each beat" },
+              speaker: { type: "string", description: "speaker" },
+            },
+            required: ["text"],
           },
-          required: ["text"],
         },
         required: ["beat", "index"],
       },
@@ -82,7 +88,9 @@ export const generatorTools = [
       description: "delete beat from mulmo script.",
       parameters: {
         type: "object",
-        index: { type: "number", description: "position index of beats array" },
+        properties: {
+          index: { type: "number", description: "position index of beats array" },
+        },
         required: ["index"],
       },
     },
