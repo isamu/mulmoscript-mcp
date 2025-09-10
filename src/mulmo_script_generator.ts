@@ -138,4 +138,26 @@ export class MulmoScriotGenerator {
       text: `set directory: ${this.sessionDir}`,
     };
   };
+
+  // from vision
+  public callNamedFunction = async (functionName: string, args?: any) => {
+    const { _index: index } = args;
+    if (index === undefined || !this.data.beats[index]) {
+      return { text: `not exist such beat ${index}` };
+    }
+    //
+    this.data.beats[index] = {
+      ...this.data.beats[index],
+      image: {
+        type: "vision",
+        style: functionNameToTemplateName(functionName),
+        data: args,
+      },
+    };
+  };
 }
+export const functionNameToTemplateName = (functionName: string) => {
+  const tmpName = functionName.replace(/^updateBeatStyleTo/i, "");
+  const fileName = tmpName.charAt(0).toLowerCase() + tmpName.slice(1);
+  return fileName + "Slide";
+};

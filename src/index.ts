@@ -9,6 +9,7 @@ import path from "path";
 
 import { MulmoScriotGenerator } from "./mulmo_script_generator";
 import { generatorTools } from "./tools";
+import { toolsForBeat } from "./tools2";
 
 export const openAIToolsToAnthropicTools = (tools: any[]) => {
   return {
@@ -41,7 +42,7 @@ export const getServer = () => {
 
   // List available tools
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return openAIToolsToAnthropicTools(generatorTools);
+    return openAIToolsToAnthropicTools([...generatorTools, ...toolsForBeat]);
   });
 
   // Handle tool calls
@@ -58,12 +59,13 @@ export const getServer = () => {
             content: [
               {
                 type: "text",
-                text: ret.text,
+                text: ret?.text,
               },
             ],
           };
         }
       }
+      await generator.callNamedFunction(name, args as any);
       return {
         content: [
           {
