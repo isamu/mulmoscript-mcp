@@ -1,6 +1,6 @@
 import { OpenAITool } from "./type";
 
-export const generatorTools: OpenAITool[]  = [
+export const generatorTools: OpenAITool[] = [
   {
     type: "function",
     function: {

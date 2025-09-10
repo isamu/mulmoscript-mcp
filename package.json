@@ -26,7 +26,8 @@
   "homepage": "https://github.com/isamu/mulmoscript-mcp",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.5"
+    "@modelcontextprotocol/sdk": "^1.17.5",
+    "mulmocast-vision": "^0.1.3"
   },
   "devDependencies": {
     "eslint": "^9.35.0",

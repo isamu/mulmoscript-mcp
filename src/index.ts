@@ -10,7 +10,7 @@ import path from "path";
 import { MulmoScriotGenerator } from "./mulmo_script_generator";
 import { generatorTools } from "./tools";
 import { toolsForBeat } from "./tools2";
-import { OpenAITool } from "./type";
+import { type OpenAITool } from "mulmocast-vision";
 
 export const openAIToolsToAnthropicTools = (tools: OpenAITool[]) => {
   return {

@@ -144,7 +144,7 @@ export class MulmoScriotGenerator {
       return { text: `not exist such beat ${index}` };
     }
     //
-    const { imagePrompt, ...newBeat } = this.data.beats[index];
+    const { imagePrompt: __, ...newBeat } = this.data.beats[index];
     this.data.beats[index] = {
       ...newBeat,
       image: {
