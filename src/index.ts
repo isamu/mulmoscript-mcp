@@ -4,12 +4,12 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, CallToolRequest, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import { type OpenAITool, toolsForBeat } from "mulmocast-vision";
 import os from "os";
 import path from "path";
 
 import { MulmoScriotGenerator } from "./mulmo_script_generator";
 import { generatorTools } from "./tools";
-import { type OpenAITool, toolsForBeat } from "mulmocast-vision";
 
 export const openAIToolsToAnthropicTools = (tools: OpenAITool[]) => {
   return {
@@ -22,9 +22,18 @@ export const openAIToolsToAnthropicTools = (tools: OpenAITool[]) => {
 
 export const getServer = () => {
   const documentsDir = path.join(os.homedir(), "Documents");
-  const now = Date.now();
+  const now = new Date();
 
-  const outputDir = path.join(documentsDir, "mulmocast-vision", String(now));
+  const formatted = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+    String(now.getHours()).padStart(2, "0"),
+    String(now.getMinutes()).padStart(2, "0"),
+    String(now.getSeconds()).padStart(2, "0"),
+  ].join("-");
+
+  const outputDir = path.join(documentsDir, "mulmocast-vision", formatted);
 
   const generator = new MulmoScriotGenerator({ outputDir });
 
