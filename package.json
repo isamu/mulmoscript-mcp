@@ -4,7 +4,7 @@
   "description": "mulmoscript generator mcp server",
   "main": "lib/index.js",
   "bin": {
-    "mulmocast-vision": "lib/index.js"
+    "mulmoscript-generator": "lib/index.js"
   },
   "files": [
     "./lib"
