@@ -11,7 +11,7 @@ export const generatorTools: OpenAITool[] = [
         properties: {
           mode: { type: "string", description: "mode" },
         },
-        required: ["url"],
+        required: ["mode"],
       },
     },
   },
@@ -74,7 +74,7 @@ export const generatorTools: OpenAITool[] = [
               speaker: { type: "string", description: "speaker" },
               imagePrompt: { type: "string", description: "prompt to generate image" },
             },
-            required: ["text"],
+            required: [],
           },
         },
         required: ["beat", "index"],
