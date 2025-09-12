@@ -11,7 +11,7 @@ export const generatorTools: OpenAITool[] = [
         properties: {
           mode: { type: "string", description: "mode" },
         },
-        required: ["url"],
+        required: ["mode"],
       },
     },
   },
@@ -74,7 +74,7 @@ export const generatorTools: OpenAITool[] = [
               speaker: { type: "string", description: "speaker" },
               imagePrompt: { type: "string", description: "prompt to generate image" },
             },
-            required: ["text"],
+            required: [],
           },
         },
         required: ["beat", "index"],
@@ -120,6 +120,11 @@ export const generatorTools: OpenAITool[] = [
         type: "object",
         properties: {
           directoryName: { type: "string", description: "Directory name" },
+          baseDirectoryName: {
+            type: "string",
+            description:
+              "Base Directory name. Specify this when restarting a process. If not specified, a base directory name based on the date will be specified and returned. When restarting, please specify this value.",
+          },
         },
         required: ["directoryName"],
       },
@@ -136,6 +141,21 @@ export const generatorTools: OpenAITool[] = [
           directoryName: { type: "string", description: "Directory name" },
         },
         required: ["directoryName"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "loadMulmoScript",
+      description: "load mulmo script.",
+      parameters: {
+        type: "object",
+        properties: {
+          directoryName: { type: "string", description: "Directory name" },
+          baseDirectoryName: { type: "string", description: "Base Directory name" },
+        },
+        required: ["directoryName", "baseDirectoryName"],
       },
     },
   },

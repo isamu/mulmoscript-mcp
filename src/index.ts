@@ -4,7 +4,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, CallToolRequest, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-import { type OpenAITool, toolsForBeat } from "mulmocast-vision";
+import { type OpenAITool, toolsForBeat, formattedDate } from "mulmocast-vision";
 import os from "os";
 import path from "path";
 
@@ -21,20 +21,7 @@ export const openAIToolsToAnthropicTools = (tools: OpenAITool[]) => {
 };
 
 export const getServer = () => {
-  const documentsDir = path.join(os.homedir(), "Documents");
-  const now = new Date();
-
-  const formatted = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-    String(now.getHours()).padStart(2, "0"),
-    String(now.getMinutes()).padStart(2, "0"),
-    String(now.getSeconds()).padStart(2, "0"),
-  ].join("-");
-
-  const outputDir = path.join(documentsDir, "mulmocast-vision", formatted);
-
+  const outputDir = path.join(os.homedir(), "Documents", "mulmocast-script", formattedDate());
   const generator = new MulmoScriotGenerator({ outputDir });
 
   const server = new Server(
@@ -59,6 +46,7 @@ export const getServer = () => {
     const { name, arguments: args } = request.params;
     try {
       console.error(name, JSON.stringify(args));
+      // MulmoScriotGenerator
       if (name in generator && args) {
         const key = name as keyof typeof generator;
         const method = generator[key];
@@ -74,12 +62,13 @@ export const getServer = () => {
           };
         }
       }
+      // mulmo vision
       await generator.callNamedFunction(name, args as any);
       return {
         content: [
           {
             type: "text",
-            text: `hello ${name} ${JSON.stringify(args)}`,
+            text: `${name} created successfully`,
           },
         ],
       };

@@ -1,4 +1,6 @@
 import path from "path";
+import fs from "fs";
+import os from "os";
 import { writeFileSync, mkdirSync } from "fs";
 
 type BeatWithPosition = { index: number; beat: Beat };
@@ -115,25 +117,53 @@ export class MulmoScriotGenerator {
   //   getStyles
   //   setStyle
 
-  public saveMulmoScript = () => {
+  private writeMulmoScript = (isTmp: boolean = false) => {
     const outputDir = path.resolve(this.outputDir, this.sessionDir);
-    const outFile = path.resolve(outputDir, "script.json");
+    const outFile = path.resolve(outputDir, isTmp ? Date.now() + ".json" : "script.json");
 
     writeFileSync(outFile, JSON.stringify(this.data, null, 2));
+    return outFile;
+  };
+  public saveMulmoScript = () => {
+    const outFile = this.writeMulmoScript();
 
     return {
       text: `saved script: ${outFile}`,
     };
   };
 
+  public loadMulmoScript = async ({ directoryName, baseDirectoryName }: { directoryName: string; baseDirectoryName?: string }) => {
+    if (baseDirectoryName) {
+      const outputDir = path.join(os.homedir(), "Documents", "mulmocast-script", baseDirectoryName);
+      const scriptPath = path.join(outputDir, directoryName, "script.json");
+      if (fs.existsSync(scriptPath)) {
+        this.outputDir = outputDir;
+        this.sessionDir = directoryName;
+        const data = JSON.parse(fs.readFileSync(scriptPath, "utf-8"));
+        this.data = data;
+        return {
+          text: `load success`,
+        };
+      }
+    }
+    return {
+      text: `load success`,
+    };
+  };
+
   // for mcp
-  public setDirectory = async ({ directoryName }: { directoryName: string }) => {
+  public setDirectory = async ({ directoryName, baseDirectoryName }: { directoryName: string; baseDirectoryName?: string }) => {
+    if (baseDirectoryName) {
+      const outputDir = path.join(os.homedir(), "Documents", "mulmocast-script", baseDirectoryName);
+      this.outputDir = outputDir;
+    }
     this.sessionDir = directoryName as string;
     const outputDir = path.resolve(this.outputDir, this.sessionDir);
     mkdirSync(outputDir, { recursive: true });
 
     return {
-      text: `set directory: ${this.sessionDir}`,
+      text: `set directory: ${this.sessionDir}: baseDirectoryName is ${path.basename(this.outputDir)}`,
+      baseDirectoryName: path.basename(this.outputDir),
     };
   };
 
@@ -153,6 +183,7 @@ export class MulmoScriotGenerator {
         data: args,
       },
     };
+    this.writeMulmoScript(true);
   };
 }
 export const functionNameToTemplateName = (functionName: string) => {
