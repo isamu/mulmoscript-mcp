@@ -8,7 +8,7 @@ type BeatPosition = { index: number };
 type Beat = {
   id?: string;
   speaker?: string;
-  test: string;
+  text: string;
   imagePrompt?: string;
 };
 
